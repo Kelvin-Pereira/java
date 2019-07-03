@@ -1,0 +1,83 @@
+1. Trabalhar com taglibs do JSTL.
+
+a) Abra o aplicativo NetBeans IDE.
+
+b) No menu Arquivo escolha a opção Novo Projeto. Selecione a categoria Java Web e o projeto Aplicação Web.
+
+c) Prossiga definindo o nome Atividade08 ao projeto. Verifique se a localização do projeto está indicando a pasta ADS020. Senão estiver, localize-a acionando Procurar. 
+
+d) Escolha o servidor Apache Tomcat como ambiente de execução. Deixe desmarcado todos os frameworks e finalize o assistente.
+
+e) Baixe o arquivo http://github.com/jrsmjr/ADS020/jslt.zip extraindo na pasta /WEB-INF/lib do seu projeto.
+ 
+f) Importe as tags Core e Formatting do JSTL no arquivo index.jsp.
+
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+g) No menu Executar acione a opção Executar Projeto. Foi aberto o navegador exibindo a página inicial? 
+
+h) Utilizando a tag <c:set> Definina uma variável numero e atribua o valor 1000 (Dica: <c:set var="numero" value="1000"/>).
+
+i) Exiba o valor da variável numero com a tag <c:out> (Dica: <c:out value="${ numero }"/>). Tente exibir o valor usando apenas a expression languagem ${ numero }. Funcionou?
+
+j) Crie uma condição com a tag <c:if> que verifique se o numero é maior que 1 e exiba o parágrafo "${ numero } é maior que 1".
+
+<c:if test="${ numero > 1 }">
+   <p>${ numero } é maior que 1</p>
+</c:if>
+
+k) Crie um laço <c:forTokens> para alimentar os itens de um campo de seleção <select>.
+
+<select>
+<c:forTokens items = "DF,GO" delims = "," var = "uf">
+  <option value="${ uf }">${ uf }</option>
+</c:forTokens>
+</select>
+
+l) Formate o valor da variável numero usando a máscara R$ #,##0.00 (Dica: <fmt:formatNumber value="${ numero }" pattern="R$ #,##0.00"/>).
+
+m) Formatar a data atual usando a máscara dd/MM/yyyy (Dica: <jsp:useBean id="dataAtual" class="java.util.Date"/>
+<fmt:formatDate value="${ dataAtual }" pattern="dd/MM/yyyy"/>).
+
+n) Interrompa a execução do Tomcat na aba Saída/Apache Tomcat ou TomEE do NetBeans.
+
+o) Adicione os arquivos no git local e faça o commit com o comentário "Criando projeto web Atividade08".
+
+p) Envie os arquivos versionados para o git remoto acionando a opção Expandir para Upstream do menu Equipe->Remoto.
+
+
+
+2. Aplicar JSTL nas páginas JSP da Atividade04.
+
+a) Abra o projeto Atividade04 no NetBeans.
+
+b) Instale as bibliotecas do JSTL no projeto.
+
+c) Importe as tags Core e Formatting do JSTL no arquivo listar_aluno.jsp.
+
+d) Altere o código scriptles do arquivo listar_aluno.jsp para taglib e expression language.
+
+<c:forEach var="aluno" items="${lista}">
+  <tr>.>
+  <td><fmt:formatNumber value="${ aluno.getMatricula() }" pattern="00000000"/></td>
+  <td>${ aluno.getMatricula() }</td>
+  <td><a href="<c:url value="${ request.getContextPath() }${ '/aluno/alterar?id=' }${ aluno.getId() }"/>">Alterar</a>
+  <a href="<c:url value="${ request.getContextPath() }${ '/aluno/excluir?id=' }${ aluno.getId() }">Excluir</a></td>
+  </tr>
+</c:forEach>
+
+e) Importe as tags Core e Formatting do JSTL no arquivo alterar_aluno.jsp.
+
+f) Altere o código scriptles do arquivo listar_aluno.jsp para taglib e expression language.
+
+...
+<input type="hidden" name="id" value="${ aluno.getId() }"/>
+...
+<input type="text" name="matricula" size="15" value="${ aluno.getMatricula() }">
+...
+<input type="text" name="nome" size="30" value="${ aluno.getNome() }">
+
+g) Adicione os arquivos no git local e faça o commit com o comentário "Adicionando jstl em Atividade04".
+
+h) Envie os arquivos versionados para o git remoto acionando a opção Expandir para Upstream do menu Equipe->Remoto.

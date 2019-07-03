@@ -1,0 +1,169 @@
+﻿1. Trabalhar com diretivas e scriptlets do JSP.
+
+a) Abra o aplicativo NetBeans IDE.
+
+b) No menu Arquivo escolha a opção Novo Projeto. Selecione a categoria Java Web e o projeto Aplicação Web.
+
+c) Prossiga definindo o nome Atividade07 ao projeto. Verifique se a localização do projeto está indicando a pasta ADS020. Senão estiver, localize-a acionando Procurar. 
+
+d) Escolha o servidor Apache Tomcat como ambiente de execução. Deixe desmarcado todos os frameworks e finalize o assistente.
+
+e) Altere o corpo da página index.jsp declarando uma variável msg do tipo String e inicialize-a com "Olá Mundo!" (Dica: <%String msg="Olá Mundo!"%>).
+
+f) Exiba o valor da variável msg dentro da tag <h1> (Dica: <h1><%=msg%></<h1>).
+
+g) No menu Executar acione a opção Executar Projeto. Foi aberto o navegador exibindo a página inicial?  
+
+h) Crie um JSP erro.jsp clicando com o botão direito sobre Páginas Web.
+
+i) Acrescente a diretiva @page para indicar que se trata de uma página de erro (Dica: <%@page isErrorPage="true"%>).
+
+j) Altere o corpo da página erro.jsp para exibir um título e um parágrafo contento a exceção.
+
+<h1>Deu Ruim!</h1>
+<p>Mensagem do erro: <%=exception.getMessage()%></p>
+
+k) Acrescente no corpo da página index.jsp uma linha de código para lançar uma exceção.
+
+<%int x = 12/0;%>
+
+l) Recarregue a página index.jsp no navegador. Qual foi o resultado?
+
+m) Crie um JSP cabecalho.jsp clicando com o botão direito sobre Páginas Web. Altere o conteúdo do JSP para o seguinte código.
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page errorPage="erro.jsp"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+
+n) Crie um JSP rodape.jsp clicando com o botão direito sobre Páginas Web. Altere o conteúdo do JSP para o seguinte código.
+
+    </body>
+</html>
+
+o) Altere o conteúdo da página index.jsp incluindo o cabeçalho e o rodapé.
+
+<%@include file="cabecalho.jsp"%>
+        <h1>Página inicial</<h1>
+<%@include file="rodape.jsp"%>
+
+p) Recarregue a página index.jsp no navegador. Qual foi o resultado?
+
+q) Crie um pacote beans clicando com o botão direito sobre Pacotes de Códigos-fonte.
+
+r) No pacote beans Crie uma classe Aluno que implemente a interface Serializable.
+
+s) Defina na classe Aluno os atributos matricula (int) e nome (String) bem como seus métodos getters e setters.
+
+t) Declare um bean aluno através da Standard Action <jsp:useBean>.
+
+<jsp:useBean id="aluno" class="beans.Aluno"/>
+
+u) Defina os atributos matricula e nome para o bean aluno através da Standard Action <jsp:setProperty>.
+
+<jsp:setProperty name="aluno" property="matricula" value="2016100"/>
+<jsp:setProperty name="aluno" property="nome" value="JOSE"/>
+
+v) Exiba os atributos do bean aluno através da Standard Action <jsp:getProperty>.
+
+<p>Os atributos do bean Aluno são: <jsp:getProperty name="aluno" property="matricula"/> e <jsp:getProperty name="aluno" property="nome"/></p>
+
+x) Interrompa a execução do Tomcat na aba Saída/Apache Tomcat ou TomEE do NetBeans.
+
+y) Adicione os arquivos no git local e faça o commit com o comentário "Criando projeto web Atividade07".
+
+z) Envie os arquivos versionados para o git remoto acionando a opção Expandir para Upstream do menu Equipe->Remoto.
+
+
+
+2. Criar um JSP para listar alunos.
+
+a) Abra o projeto Atividade04 no NetBeans.
+
+b) Crie uma pasta visao clicando com o botão direito sobre WEB-INF.
+
+c) Crie um JSP listar_aluno.jsp clicando com o botão direito sobre a pasta visao.
+
+d) Faça o conteúdo do JSP ser o mesmo que é retornado pelo método doGet() do servlet ListarAlunoServlet.
+
+e) Importe no JSP as classes java.util.List e modelo.entidades.Aluno.
+
+<%@page import java.util.List%>
+<%@page import modelo.entidades.Aluno%>
+
+f) No JSP declare uma variável lista do tipo List<Aluno> e atribua o valor do parâmetro lista da requisição.
+
+<%
+  List<Aluno> lista = (List<Aluno>) request.getAttribute("lista");  
+%>
+
+g) Faça um laço que percorra os itens da variável lista e imprima os dados dos alunos.
+
+<%
+  for(Aluno aluno: lista) {
+%>
+  <tr>
+  <td><%=aluno.getMatricula()%></td>
+  <td><%=aluno.getMatricula()%></td>
+  <td><a href="<%=request.getContextPath()+"/aluno/alterar?id="+aluno.getId()%>">Alterar</a>
+  <a href="<%=request.getContextPath()+"/aluno/excluir?id="+aluno.getId()%>">Excluir</a></td>
+  </tr>
+<%
+  }
+%>
+
+h) Altere o método doGet() de ListarAlunoServlet para adicionar a variável lista como parâmetro de requisição e despachar a página listar_aluno.jsp
+
+request.setAttribute("lista", lista);
+request.getRequestDispatcher("/WEB-INF/visao/listar_aluno.jsp").forward(request, response);
+
+i) No menu Executar acione a opção Executar Projeto e acesse a URL localhost:8081/Atividade04/aluno pelo navegador. Foi exibida uma lista dos alunos cadastrados?
+
+
+
+3. Criar um JSP para incluir aluno.
+
+a) Crie um JSP incluir_aluno.jsp clicando com o botão direito sobre a pasta visao.
+
+b) Faça o conteúdo do JSP ser o mesmo que é retornado pelo método doGet() do servlet IncluirAlunoServlet.
+
+c) Altere o método doGet() de IncluirAlunoServlet para que despache a página incluir_aluno.jsp
+
+request.getRequestDispatcher("/WEB-INF/visao/listar_aluno.jsp").forward(request, response);
+
+d) Acesse a opção Incluir na listagem de alunos. Foi exibida um formulário de inclusão de alunos?
+
+
+
+4. Criar um JSP para alterar aluno.
+
+a) Crie um JSP alterar_aluno.jsp clicando com o botão direito sobre a pasta visao.
+
+b) Faça o conteúdo do JSP ser o mesmo que é retornado pelo método doGet() do servlet AlterarAlunoServlet.
+
+c) Importe no JSP a classe modelo.entidades.Aluno.
+
+d) Altere o método doGet() de IncluirAlunoServlet para adicionar a variável aluno como parâmetro de requisição e despachar a página incluir_aluno.jsp
+
+e) Acesse a opção Alterar na listagem de alunos. Foi exibida um formulário de alteração de alunos?
+
+
+
+5. Criar um jsp para login.
+
+a) Crie um JSP login.jsp clicando com o botão direito sobre a pasta visao.
+
+b) Faça o conteúdo do JSP ser o mesmo que é retornado pelo método doGet() do servlet LoginServlet.
+
+c) Altere o método doGet() de LoginServlet para despachar a página login.jsp 
+
+d) Acesse a URL localhost:8081/Atividade04/login. Foi exibida um formulário de login?
+
+e) Adicione os arquivos no git local e faça o commit com o comentário "Adicionando jsp em Atividade04".
+
+f) Envie os arquivos versionados para o git remoto acionando a opção Expandir para Upstream do menu Equipe->Remoto.

@@ -1,0 +1,147 @@
+1. Criar um servlet para carregar um parâmetro de contexto.
+
+a) Abra o aplicativo NetBeans IDE.
+
+b) No menu Arquivo escolha a opção Novo Projeto. Selecione a categoria Java Web e o projeto Aplicação Web.
+
+c) Prossiga definindo o nome Atividade06 ao projeto. Verifique se a localização do projeto está indicando a pasta ADS020. Senão estiver, localize-a acionando Procurar. 
+
+d) Escolha o servidor Apache Tomcat como ambiente de execução. Deixe desmarcado todos os frameworks e finalize o assistente.
+
+e) Crie um pacote servlets clicando com o botão direito sobre Pacotes de Código-fonte.
+
+f) Com o botão direito sobre o pacote servlets, escolha a opção Novo->Servlet.
+
+g) Defina o nome ContextoServlet ao servlet, marque a opção para adicionar informações ao web.xml e finalize o assistente.
+
+h) Altere o método processRequest() do servlet para que seja exibido o valor de um parâmetro de contexto. 
+
+ServletContext contexto = this.getServletContext();
+String param = contexto.getInitParameter("p1");
+...
+PrintWriter out = response.getWriter();
+...
+out.println("<p>O valor do parâmetro é " + param + "</p>");
+
+i) No arquivo web.xml defina um parâmetro de contexto p1 com o valor 100.
+
+<context-param>
+        <param-name>p1</param-name>
+        <param-value>100</param-value>
+</context-param>
+
+j) No menu Executar acione a opção Executar Projeto. Em seguida, acesse a URL localhost:8081/Atividade06/ContextoServlet. Foi exibido o valor do parâmetro de contexto?
+
+k) Adicione os arquivos no git local e faça o commit com o comentário "Criando projeto web Atividade06".
+
+l) Envie os arquivos versionados para o git remoto acionando a opção Expandir para Upstream do menu Equipe->Remoto. 
+
+
+
+2. Criar um servlet para efetuar login.
+
+a) Abra o projeto Atividade04 no NetBeans.
+
+b) Crie um servlet LoginServlet dentro do pacote controle.
+
+c) Faça o padrão de URL do servlet ser "/login".
+
+d) Apague o corpo do método doGet() para que seja implementado a tela de login. 
+
+e) Altere o conteúdo da resposta HTTP para um texto HTML com a codificação UTF-8.
+
+f) Crie uma variável out do tipo PrintWriter e inicialize-a a partir do método getWriter() da variável response.
+
+g) Utilize o método println() da variável out para imprimir a seguinte página HTML.
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sistema Acadêmico</title>
+</head>
+<body> 
+	<h1>Efetuar Login</h1>
+        <form action="/login" method="post">
+		<div>
+			<label>Matrícula:</label>
+			<input type="text" name="matricula" size="15" value="">
+		</div>
+		<div>
+			<label>Senha:</label>
+			<input type="password" name="senha" size="15" value="">
+		</div>
+		<input type="submit" value="Entrar"/>
+	</form>
+</body>
+</html>
+
+h) Apague o corpo do método doPost() para que seja implementado a ação login. 
+
+i) Declare uma varíavel matricula do tipo String e atribua o valor do parâmetro matricula da requisição (String matricula = request.getParameter("matricula");).
+
+j) Declare uma varíavel senha do tipo String e atribua o valor do parâmetro senha da requisição.
+
+k) Se a matrícula e a senha estão vazias então faça o método doPost() redirecionar para o login. Caso contrário faça o método do Post() armazenar a matrícula na sessão e redirecionar para a listagem de alunos.
+
+if (matricula == null || senha == null) {
+   response.sendRedirect(request.getContextPath() + "/login");
+else {
+   HttpSession sessao = request.getSession();
+   sessao.setAttribute("autenticado", true);
+   response.sendRedirect(request.getContextPath() + "/aluno");
+}   
+
+l) No menu Executar acione a opção Executar Projeto e acesse a URL localhost:8081/Atividade04/login pelo navegador. 
+
+m) Não preencha o formulário e acione Entrar. Qual foi o resultado?
+
+n) Preencha o formulário e acione Entrar. Qual foi o resultado?
+
+
+
+3. Criar um servlet para efetuar logout.
+
+a) Crie um servlet LogoutServlet dentro do pacote controle.
+
+b) Faça o padrão de URL do servlet ser "/logout".
+
+c) Apague o corpo do método doGet() para que seja implementado a ação logout.
+
+d) Faça o método doGet() invalidar a sessão e redirecionar para o login.
+
+HttpSession session = request.getSession();
+session.invalidate();
+response.sendRedirect(request.getContextPath() + "/login");
+
+e) Acesse a URL localhost:8081/Atividade04/logout pelo navegador. Qual foi o resultado?
+
+
+
+4. Criar um filtro para login.
+
+a) Crie um filtro LoginFilter acionando o botão direito sobre o pacote controle.
+
+b) Faça o padrão de URL do filtro ser "/*" e finaliza o assistente.
+
+c) Apague todo o conteúdo da classe LoginFilter. Pressione ALT+INSERT e acione Implementar Método. Marque todos os métodos.
+
+d) Faça o método doFilter() verificar se existe o atributo de sessão user. Se existir faça o filtro aceitar a requisição. Caso contrário faça o método doFilter() redirecionar para o login. 
+
+HttpServletRequest req = (HttpServletRequest) request;
+HttpServletResponse resp = (HttpServletResponse) response;
+HttpSession session = req.getSession();
+
+if (session.getAttribute("autenticado") != null || 
+     req.getRequestURI().equals(req.getContextPath()+"/login")) {
+	chain.doFilter(req, resp);
+} else {
+	resp.sendRedirect(req.getContextPath() + "/login");
+}
+
+e) Acesse a URL localhost:8081/Atividade04/aluno pelo navegador. Qual foi o resultado?
+
+f) Efetue o login na aplicação e acesse novamente a listagem de alunos. Qual foi o resultado?
+
+g) Adicione os arquivos no git local e faça o commit com o comentário "Adicionando filtro em Atividade04".
+
+h) Envie os arquivos versionados para o git remoto acionando a opção Expandir para Upstream do menu Equipe->Remoto.
